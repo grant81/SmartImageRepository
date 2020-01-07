@@ -1,0 +1,27 @@
+version: '3.3'
+
+services:
+  migrate-imagedb:
+    image: image-db-migrate
+    build:
+      dockerfile: Dockerfile.migrate
+      context: .
+    environment:
+      POSTGRES_USER: searchservice
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: imagedb
+      POSTGRES_HOST: postgres
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:9.6
+    container_name: postgres
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+      - ./postgres/initdb.d/:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: admin
+volumes:
+  pg-data:

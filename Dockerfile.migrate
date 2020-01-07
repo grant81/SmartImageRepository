@@ -1,0 +1,12 @@
+FROM migrate/migrate AS migrate
+
+FROM gcr.io/cloudsql-docker/gce-proxy:1.12 as service
+RUN apk update && apk add bash
+WORKDIR /migrator
+COPY --from=migrate/migrate /migrate /usr/sbin/
+RUN mkdir /migrations
+ENV SSL_MODE disable
+COPY ./bin/migrate.sh .
+RUN chmod +x migrate.sh
+COPY ./postgres/migrations ./migrations
+CMD ["./migrate.sh"]
