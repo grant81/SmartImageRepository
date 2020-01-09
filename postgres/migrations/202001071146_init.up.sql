@@ -1,6 +1,6 @@
 create TABLE image_info (
     image_id bigserial,
-    image_url text NOT NULL,
+    image_url text NOT NULL UNIQUE,
     PRIMARY KEY (image_id));
 
 create TABLE image_tag (

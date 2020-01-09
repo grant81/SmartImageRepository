@@ -1,5 +1,5 @@
 import json
-cat_2014 = '../annotations_trainval2014/annotations/instances_val2014.json'
+cat_2014 = '../data/annotation/instances_val2014.json'
 
 def main():
     json_file = cat_2014

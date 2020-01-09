@@ -16,6 +16,7 @@ class Detector:
 
     def produce_tag(self, image_bytes):
         img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+        #TODO: handeling the case where image is invalid
         img = self.transforms(img).unsqueeze(0)
         if self.use_cuda:
             img = img.cuda()
