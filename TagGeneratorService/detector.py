@@ -4,7 +4,7 @@ import torchvision.transforms as transforms
 from PIL import Image
 
 class Detector:
-    def __init__(self, model, label_map, threshold= 0.5):
+    def __init__(self, model, label_map, threshold=0.5):
         self.label_map = label_map
         self.threshold = threshold
         self.model = model
@@ -16,7 +16,7 @@ class Detector:
 
     def produce_tag(self, image_bytes):
         img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-        #TODO: handeling the case where image is invalid
+        # TODO: handeling the case where image is invalid
         img = self.transforms(img).unsqueeze(0)
         if self.use_cuda:
             img = img.cuda()
@@ -28,5 +28,4 @@ class Detector:
         for i in range(len(scores)):
             if scores[i] >= self.threshold:
                 tags.add(self.label_map[str(labels[i])])
-        return tags
-
+        return list(tags)
