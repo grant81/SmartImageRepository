@@ -6,7 +6,7 @@ from torchvision.models.detection import fasterrcnn_resnet50_fpn
 import logging
 import requests
 
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                     datefmt='%m-%d %H:%M')
 
@@ -49,11 +49,11 @@ def search():
 def save():
     if request.method == 'POST':
         file = request.files['file']
-        url = request.form['url']
         img_bytes = file.read()
+        url = request.form['url']
         class_name = detector.produce_tag(image_bytes=img_bytes)
         postgres.add_image_with_tags(url, class_name)
-        return jsonify({'class_name': list(class_name)})
+        return jsonify({'tags': list(class_name)})
 
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ class Detector:
         if self.use_cuda:
             self.model = self.model.cuda()
         self.model.eval()
-        self.transforms = transforms.Compose([transforms.Resize(150), transforms.ToTensor()])
+        self.transforms = transforms.Compose([transforms.Resize(200), transforms.ToTensor()])
 
     def produce_tag(self, image_bytes):
         img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
