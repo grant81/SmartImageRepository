@@ -1,0 +1,9 @@
+FROM python:3.7.6-alpine3.10
+
+RUN apk update && apk add bash
+WORKDIR WebApp
+COPY WebApp .
+
+RUN mkdir ImageStore
+VOLUME ImageStore
+

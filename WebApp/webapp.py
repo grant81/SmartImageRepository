@@ -4,8 +4,10 @@ import logging
 from PIL import Image
 import uuid
 import os
+import json
 
 STORAGE_PATH = "ImageStore"
+COMPONENT_ID_STORAGE = 'componentKeys.json'
 
 
 def send_search_request(tags):
@@ -43,30 +45,34 @@ def send_save_image_request(image, path):
         return r.json()
 
 
-def save_image(image_bytes,url):
+def save_image(image_bytes, url):
     img = Image.open(image_bytes).convert("RGB")
     img.save(url, "JPEG")
     return url
 
 
-def run():
-    title = st.empty()
-    image_display = st.empty()
-    keywords = st.sidebar.text_input('Search by comma separated keywords')
-    image_to_search = st.sidebar.file_uploader("Search by image", type=["png", 'jpg', 'jpeg'])
-    image_to_save = st.sidebar.file_uploader("Upload by image", type=["png", 'jpg', 'jpeg'])
-    if keywords:
-        image_to_search = None
-        keywords = keywords.split(',')
-        results = send_search_request(keywords)
+def update_image_selector_id(ids, selector_name):
+    ids[selector_name] = str(uuid.uuid1())
+    with open(COMPONENT_ID_STORAGE, 'w') as f:
+        json.dump(ids, f)
+
+
+def handle_keyword_search(search_bar, title, image_display):
+    search_query = search_bar.text_input('Search by comma separated keywords')
+    if search_query:
+        search_query = search_query.split(',')
+        results = send_search_request(search_query)
         results = results['urls']
         if results:
-            title.title("showing results for keyword: {}".format(keywords))
+            title.title("showing results for keyword: {}".format(search_query))
             image_display.image(results)
         else:
             title.title("¯\_(ツ)_/¯")
-            st.header('no result found for keyword: {}'.format(keywords))
+            st.header('no result found for keyword: {}'.format(search_query))
 
+
+def handle_image_search(search_bar, title, image_display, ids):
+    image_to_search = search_bar.file_uploader("Search by image", type=["png", 'jpg', 'jpeg'], key=ids["search_image"])
     if image_to_search:
         results = send_search_image_request(image_to_search)
         results = results['urls']
@@ -76,7 +82,12 @@ def run():
         else:
             title.title("¯\_(ツ)_/¯")
             st.header('no result found for the upload image')
+        ids["search_image"] = str(uuid.uuid1())
+        update_image_selector_id(ids, "search_image")
 
+
+def handle_image_save(search_bar, title, ids):
+    image_to_save = search_bar.file_uploader("Upload by image", type=["png", 'jpg', 'jpeg'], key=ids["save_image"])
     if image_to_save:
         url = os.path.join(STORAGE_PATH, str(uuid.uuid1()) + ".jpg")
         result = send_save_image_request(image_to_save, url)
@@ -84,6 +95,23 @@ def run():
         title.title("Image Saved")
         st.header("with Tags:{}".format(result['tags']))
         st.header("at {}".format(url))
+        st.write(image_to_save)
+        update_image_selector_id(ids, "save_image")
+
+
+def run():
+    title = st.empty()
+    image_display = st.empty()
+    search_bar = st.sidebar.empty()
+    selection = st.sidebar.radio("Choice Action", ('Keyword', 'Image Search', 'Save Image'))
+    with open(COMPONENT_ID_STORAGE, 'r') as f:
+        ids = json.loads(f.read())
+    if selection == 'Keyword':
+        handle_keyword_search(search_bar, title, image_display)
+    elif selection == 'Image Search':
+        handle_image_search(search_bar, title, image_display, ids)
+    else:
+        handle_image_save(search_bar, title, ids)
 
 
 if __name__ == '__main__':
