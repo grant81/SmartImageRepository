@@ -23,5 +23,55 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: admin
+  searchservice:
+    image: searchservice
+    container_name: searchservice
+    build:
+      dockerfile: Dockerfile.searchservice
+      context: .
+    environment:
+      POSTGRES_USER: searchservice
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: imagedb
+      POSTGRES_HOST: postgres
+    ports:
+      - "8889:8889"
+    depends_on:
+      - postgres
+  tagservice:
+    image: tagservice
+    container_name: tagservice
+    build:
+      dockerfile: Dockerfile.tagservice
+      context: .
+    environment:
+      POSTGRES_USER: searchservice
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: imagedb
+      POSTGRES_HOST: postgres
+      SEARCH_SERVICE_HOST: searchservice
+    ports:
+      - "8888:8888"
+    depends_on:
+      - postgres
+  webapp:
+    image: webapp
+    container_name: webapp
+    build:
+      dockerfile: Dockerfile.webapp
+      context: .
+    environment:
+      SEARCH_SERVICE_HOST: searchservice
+      TAG_SERVICE_HOST: tagservice
+    volumes:
+      - imagestore:/WebApp/ImageStore
+    ports:
+      - "8501:8501"
+    depends_on:
+      - searchservice
+      - tagservice
+
+
 volumes:
   pg-data:
+  imagestore:

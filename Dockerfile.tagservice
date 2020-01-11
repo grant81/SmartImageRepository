@@ -1,0 +1,12 @@
+FROM python:3.7
+
+WORKDIR APP
+COPY TagGeneratorService .
+
+RUN pip3 install -r requirements.txt
+COPY postgres/datalayer/DB_controller.py .
+COPY postgres/datalayer/sqls.py .
+
+EXPOSE 8888
+
+CMD ["python","app.py"]

@@ -8,10 +8,12 @@ import json
 
 STORAGE_PATH = "ImageStore"
 COMPONENT_ID_STORAGE = 'componentKeys.json'
+SEARCH_SERVICE_HOST = os.environ['SEARCH_SERVICE_HOST']
+TAG_SERVICE_HOST = os.environ['TAG_SERVICE_HOST']
 
 
 def send_search_request(tags):
-    url = "http://localhost:8889/search"
+    url = "http://%s:8889/search" % SEARCH_SERVICE_HOST
     headers = {
         'Content-Type': "application/json",
         'Accept': "*/*",
@@ -30,7 +32,7 @@ def send_search_request(tags):
 
 
 def send_search_image_request(image):
-    url = 'http://localhost:8888/search'
+    url = 'http://%s:8888/search' % TAG_SERVICE_HOST
     files = {'file': ("file", image, 'multipart/form-data', {'Expires': '0'})}
     with requests.Session() as s:
         r = s.post(url, files=files)
@@ -38,7 +40,7 @@ def send_search_image_request(image):
 
 
 def send_save_image_request(image, path):
-    url = 'http://localhost:8888/save'
+    url = 'http://%s:8888/save' % TAG_SERVICE_HOST
     files = {'file': ("file", image, 'multipart/form-data', {'Expires': '0'}), 'url': (None, path)}
     with requests.Session() as s:
         r = s.post(url, files=files)
@@ -95,7 +97,6 @@ def handle_image_save(search_bar, title, ids):
         title.title("Image Saved")
         st.header("with Tags:{}".format(result['tags']))
         st.header("at {}".format(url))
-        st.write(image_to_save)
         update_image_selector_id(ids, "save_image")
 
 

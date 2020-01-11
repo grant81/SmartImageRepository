@@ -5,21 +5,27 @@ import json
 from torchvision.models.detection import fasterrcnn_resnet50_fpn
 import logging
 import requests
+import torch
+import os
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                     datefmt='%m-%d %H:%M')
 
+SEARCH_SERVICE_HOST = os.environ['SEARCH_SERVICE_HOST']
+STATE_DICT_PATH = 'model/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth'
+
 app = Flask(__name__)
-model = fasterrcnn_resnet50_fpn(pretrained=True)
+model = fasterrcnn_resnet50_fpn(       )
+model.load_state_dict(torch.load(STATE_DICT_PATH))
 with open('categories.json') as json_file:
     labelMap = json.load(json_file)
 detector = Detector(model, labelMap)
-postgres = PostgresImageDBController("imagedb", "searchservice", "admin", "localhost")
-
+postgres = PostgresImageDBController(os.environ['POSTGRES_DB'], os.environ['POSTGRES_USER'],
+                                     os.environ['POSTGRES_PASSWORD'], os.environ['POSTGRES_HOST'])
 
 def send_search_request(tags):
-    url = "http://localhost:8889/search"
+    url = "http://%s:8889/search" %SEARCH_SERVICE_HOST
     headers = {
         'Content-Type': "application/json",
         'Accept': "*/*",
@@ -45,6 +51,7 @@ def search():
         tags = detector.produce_tag(image_bytes=img_bytes)
         return send_search_request(tags)
 
+
 @app.route('/save', methods=['POST'])
 def save():
     if request.method == 'POST':
@@ -57,4 +64,4 @@ def save():
 
 
 if __name__ == '__main__':
-    app.run(port="8888")
+    app.run(host='0.0.0.0', port="8888")
