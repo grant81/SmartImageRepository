@@ -4,4 +4,4 @@
 /WebApp/ImageStore/
 */__pycache__
 /postgres/datalayer/DB_controller.egg-info/
-/TagGeneratorService/model/
+/TagGeneratorService/model/*
