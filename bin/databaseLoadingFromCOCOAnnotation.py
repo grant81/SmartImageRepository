@@ -1,13 +1,16 @@
 import json
 from collections import defaultdict
 from DB_controller import PostgresImageDBController
+import sys
 
-postgres = PostgresImageDBController("imagedb", "searchservice", "admin", "localhost")
-cat_2014 = '../data/annotation/instances_val2014.json'
+# being used to populate the database using the COCO dataset annotation file,
+# start by running python databaseLoadingFromCOCOAnnotation.py [path to annotation file]
+
+postgres = PostgresImageDBController("imagedb", "searchservice", "admin", "localhost", 5432)
 
 
 def main():
-    json_file = cat_2014
+    json_file = sys.argv[1]
     if json_file is not None:
         with open(json_file, 'r') as COCO:
             js = json.loads(COCO.read())

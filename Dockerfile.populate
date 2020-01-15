@@ -1,0 +1,11 @@
+FROM python:3.7
+
+WORKDIR APP
+COPY bin/databaseLoadingFromCOCOAnnotation.py .
+COPY data/instances_val2014.json .
+RUN pip3 install pg8000
+
+COPY postgres/datalayer/DB_controller.py .
+COPY postgres/datalayer/sqls.py .
+
+CMD ["python","databaseLoadingFromCOCOAnnotation.py","instances_val2014.json"]
