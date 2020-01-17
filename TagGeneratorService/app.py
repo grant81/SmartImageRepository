@@ -16,7 +16,7 @@ SEARCH_SERVICE_HOST = os.environ['SEARCH_SERVICE_HOST']
 STATE_DICT_PATH = 'model/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth'
 
 app = Flask(__name__)
-model = fasterrcnn_resnet50_fpn(       )
+model = fasterrcnn_resnet50_fpn(pretrained=False)
 model.load_state_dict(torch.load(STATE_DICT_PATH))
 with open('categories.json') as json_file:
     labelMap = json.load(json_file)
