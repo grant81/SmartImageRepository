@@ -6,6 +6,7 @@ import uuid
 import os
 import json
 
+# Temporary front end, I am sure there is a better way to do it
 STORAGE_PATH = "ImageStore"
 COMPONENT_ID_STORAGE = 'componentKeys.json'
 SEARCH_SERVICE_HOST = os.environ['SEARCH_SERVICE_HOST']
