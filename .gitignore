@@ -1,7 +1,7 @@
 .idea
-*/.idea
-/data/
-/WebApp/ImageStore/
-*/__pycache__
+**/.idea
+/data/*
+/WebApp/ImageStore/*
+**/__pycache__
 /postgres/datalayer/DB_controller.egg-info/
 /TagGeneratorService/model/*

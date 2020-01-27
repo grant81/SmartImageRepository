@@ -42,6 +42,6 @@ class PostgresImageDBController:
         return out
 
 
-if __name__ == '__main__':
-    postgres = PostgresImageDBController("imagedb", "searchservice", "admin", "localhost")
-    postgres.search_tags(('person', 'cup', 'spoon'))
+# if __name__ == '__main__':
+#     postgres = PostgresImageDBController("imagedb", "searchservice", "admin", "localhost")
+#     postgres.search_tags(('person', 'cup', 'spoon'))
