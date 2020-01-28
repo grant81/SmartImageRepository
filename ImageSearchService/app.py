@@ -10,6 +10,7 @@ logging.basicConfig(level=logging.DEBUG,
                     datefmt='%m-%d %H:%M')
 app = Flask(__name__)
 
+
 @app.route('/search', methods=['GET'])
 def search():
     if request.method == 'GET':

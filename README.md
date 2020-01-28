@@ -17,7 +17,7 @@
  
 ### how does the app works:
 This app is consist of three microservices, search service, tag service and web app.
-Postgres database is used for storage. Everything is containerized and can be bought up
+Postgres database is used for storage, and Redis is used for caching. Everything is containerized and can be bought up
  by running `docker-compose up`. The flow chart of the design can be found below.
  
  ![flowchart](pic/flowChart.png)
@@ -26,8 +26,8 @@ Postgres database is used for storage. Everything is containerized and can be bo
 |services|port|endpoints|
 |--------|----|---------|
 |web app|8501|None|
-|tag service|8888|/search|
-|search service|8889|/search, /save|
+|tag service|8888|`/search`|
+|search service|8889|`/search`, `/save`|
 |postgresSQL DB|5432|None|
 
 
