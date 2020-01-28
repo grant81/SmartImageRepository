@@ -23,6 +23,13 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: admin
+    restart: always
+  redis:
+    container_name: redis
+    image: redis:4.0-alpine
+    ports:
+      - '6379:6379'
+    restart: always
   searchservice:
     image: searchservice
     container_name: searchservice
@@ -34,10 +41,15 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: imagedb
       POSTGRES_HOST: postgres
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ''
     ports:
       - "8889:8889"
     depends_on:
       - postgres
+      - redis
+    restart: always
   tagservice:
     image: tagservice
     container_name: tagservice
@@ -50,10 +62,15 @@ services:
       POSTGRES_DB: imagedb
       POSTGRES_HOST: postgres
       SEARCH_SERVICE_HOST: searchservice
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ''
     ports:
       - "8888:8888"
     depends_on:
       - postgres
+      - redis
+    restart: always
   webapp:
     image: webapp
     container_name: webapp
@@ -70,7 +87,7 @@ services:
     depends_on:
       - searchservice
       - tagservice
-
+    restart: always
 
 volumes:
   pg-data:

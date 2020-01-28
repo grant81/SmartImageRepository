@@ -2,5 +2,6 @@ Flask==1.1.1
 requests==2.22.0
 pg8000==1.13.2
 Pillow==6.2.2
-pyspellchecker
-nltk
+pyspellchecker==0.5.3
+nltk==3.4.5
+redis==3.3.11
