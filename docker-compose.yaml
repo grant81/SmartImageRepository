@@ -26,6 +26,7 @@ services:
     restart: always
   redis:
     container_name: redis
+    command: redis-server --requirepass admin
     image: redis:4.0-alpine
     restart: always
   searchservice:
@@ -41,7 +42,7 @@ services:
       POSTGRES_HOST: postgres
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_PASSWORD: ''
+      REDIS_PASSWORD: admin
     ports:
       - "8889:8889"
     depends_on:
@@ -62,7 +63,7 @@ services:
       SEARCH_SERVICE_HOST: searchservice
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_PASSWORD: ''
+      REDIS_PASSWORD: admin
     ports:
       - "8888:8888"
     depends_on:

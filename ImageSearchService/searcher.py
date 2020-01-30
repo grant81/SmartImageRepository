@@ -30,7 +30,8 @@ class Searcher:
         if result:
             return result
         result = self.db.search_tags(keywords)
-        self.redis_client.rpush(redis_key, *result)
+        if result:
+            self.redis_client.rpush(redis_key, *result)
         return result
 
 # if __name__ == '__main__':
