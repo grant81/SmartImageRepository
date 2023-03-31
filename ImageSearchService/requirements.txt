@@ -4,4 +4,4 @@ pg8000==1.13.2
 Pillow==6.2.2
 pyspellchecker==0.5.3
 nltk==3.4.5
-redis==3.3.11
+redis==4.4.4
